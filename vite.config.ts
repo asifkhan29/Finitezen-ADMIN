@@ -9,10 +9,9 @@ import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 export default defineConfig({
   tanstackStart: {
     server: { 
-      // Force Nitro to build for Vercel
-      preset: "vercel" 
-      
-      // ⚠️ CRITICAL: Notice that `entry: "server"` is completely REMOVED from here.
+      preset: "vercel",
+      // Bring this back! This tells Nitro to use the file we are about to recreate.
+      entry: "server" 
     },
   },
 });
