@@ -17,6 +17,7 @@ import { Route as ProtectedNylasRouteImport } from './routes/_protected/nylas'
 import { Route as ProtectedLimitsRouteImport } from './routes/_protected/limits'
 import { Route as ProtectedHrListRouteImport } from './routes/_protected/hrList'
 import { Route as ProtectedFeedbackRouteImport } from './routes/_protected/feedback'
+import { Route as ProtectedActivityRouteImport } from './routes/_protected/activity'
 import { Route as ProtectedHrDetailIdRouteImport } from './routes/_protected/hrDetail.$id'
 
 const LoginRoute = LoginRouteImport.update({
@@ -58,6 +59,11 @@ const ProtectedFeedbackRoute = ProtectedFeedbackRouteImport.update({
   path: '/feedback',
   getParentRoute: () => ProtectedRoute,
 } as any)
+const ProtectedActivityRoute = ProtectedActivityRouteImport.update({
+  id: '/activity',
+  path: '/activity',
+  getParentRoute: () => ProtectedRoute,
+} as any)
 const ProtectedHrDetailIdRoute = ProtectedHrDetailIdRouteImport.update({
   id: '/hrDetail/$id',
   path: '/hrDetail/$id',
@@ -67,6 +73,7 @@ const ProtectedHrDetailIdRoute = ProtectedHrDetailIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof ProtectedIndexRoute
   '/login': typeof LoginRoute
+  '/activity': typeof ProtectedActivityRoute
   '/feedback': typeof ProtectedFeedbackRoute
   '/hrList': typeof ProtectedHrListRoute
   '/limits': typeof ProtectedLimitsRoute
@@ -76,6 +83,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/login': typeof LoginRoute
+  '/activity': typeof ProtectedActivityRoute
   '/feedback': typeof ProtectedFeedbackRoute
   '/hrList': typeof ProtectedHrListRoute
   '/limits': typeof ProtectedLimitsRoute
@@ -88,6 +96,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_protected': typeof ProtectedRouteWithChildren
   '/login': typeof LoginRoute
+  '/_protected/activity': typeof ProtectedActivityRoute
   '/_protected/feedback': typeof ProtectedFeedbackRoute
   '/_protected/hrList': typeof ProtectedHrListRoute
   '/_protected/limits': typeof ProtectedLimitsRoute
@@ -101,6 +110,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/login'
+    | '/activity'
     | '/feedback'
     | '/hrList'
     | '/limits'
@@ -110,6 +120,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/login'
+    | '/activity'
     | '/feedback'
     | '/hrList'
     | '/limits'
@@ -121,6 +132,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/_protected'
     | '/login'
+    | '/_protected/activity'
     | '/_protected/feedback'
     | '/_protected/hrList'
     | '/_protected/limits'
@@ -193,6 +205,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedFeedbackRouteImport
       parentRoute: typeof ProtectedRoute
     }
+    '/_protected/activity': {
+      id: '/_protected/activity'
+      path: '/activity'
+      fullPath: '/activity'
+      preLoaderRoute: typeof ProtectedActivityRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
     '/_protected/hrDetail/$id': {
       id: '/_protected/hrDetail/$id'
       path: '/hrDetail/$id'
@@ -204,6 +223,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface ProtectedRouteChildren {
+  ProtectedActivityRoute: typeof ProtectedActivityRoute
   ProtectedFeedbackRoute: typeof ProtectedFeedbackRoute
   ProtectedHrListRoute: typeof ProtectedHrListRoute
   ProtectedLimitsRoute: typeof ProtectedLimitsRoute
@@ -214,6 +234,7 @@ interface ProtectedRouteChildren {
 }
 
 const ProtectedRouteChildren: ProtectedRouteChildren = {
+  ProtectedActivityRoute: ProtectedActivityRoute,
   ProtectedFeedbackRoute: ProtectedFeedbackRoute,
   ProtectedHrListRoute: ProtectedHrListRoute,
   ProtectedLimitsRoute: ProtectedLimitsRoute,

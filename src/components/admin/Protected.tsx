@@ -44,8 +44,7 @@ const SystemLoader = () => {
 
 export function Protected({ children }: { children: React.ReactNode }) {
   const [isValid, setIsValid] = useState<boolean | null>(null);
-  const token = localStorage.getItem("token");
-
+const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
   useEffect(() => {
     const checkTokenStatus = async () => {
       if (!token) {

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link } from "@tanstack/react-router";
 import { Loader2 } from "lucide-react";
 import { CountryFilter, CountryPill, Pill, SearchInput, Section, Th } from "@/components/admin/primitives";
 import { adminLimitsApi ,  AdminUserLimitDto } from "@/components/admin/api/adminLimitsService";
@@ -147,7 +147,7 @@ export function LimitsPage() {
               {filtered.map((u) => (
                 <tr key={u.userId} className="hover:bg-muted/10 transition-colors">
                   <td className="px-4 py-3 align-top">
-                    <Link to={`/hr/${u.userId}`} className="font-medium hover:underline text-primary truncate max-w-[150px] block">
+                    <Link to="/hrDetail/$id" params={{ id: u.userId }} className="font-medium hover:underline text-primary truncate max-w-[150px] block">
                       {u.name || "Unknown"}
                     </Link>
                     <div className="text-[11px] text-muted-foreground truncate max-w-[150px]">{u.email}</div>

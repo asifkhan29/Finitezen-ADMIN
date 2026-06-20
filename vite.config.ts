@@ -8,10 +8,9 @@ import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 
 export default defineConfig({
   tanstackStart: {
-    server: { 
+    server: {
       preset: "vercel",
-      // Bring this back! This tells Nitro to use the file we are about to recreate.
-      entry: "server" 
+      entry: "server",
     },
   },
 });
