@@ -8,8 +8,11 @@ import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 
 export default defineConfig({
   tanstackStart: {
-    // Redirect TanStack Start's bundled server entry to src/server.ts (our SSR error wrapper).
-    // nitro/vite builds from this
-    server: { entry: "server" },
+    server: { 
+      // Redirect TanStack Start's bundled server entry to src/server.ts
+      entry: "server",
+      // Override the Lovable default (Cloudflare) to build for Vercel
+      preset: "vercel" 
+    },
   },
 });
