@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+// 1. UPDATED IMPORT
+import { Link } from "@tanstack/react-router";
 import { CountryFilter, CountryPill, ExportBtn, Pill, SearchInput, Section, Td, Th } from "@/components/admin/primitives";
 import { Loader2 } from "lucide-react";
 import { adminHrApi , HrUserDto } from "@/components/admin/api/adminHrService";
@@ -62,7 +63,6 @@ export function HRList() {
         <div className="flex items-center gap-2 flex-wrap">
           <SearchInput value={q} onChange={setQ} placeholder="Search by email, name, ID" />
           <CountryFilter value={country} onChange={setCountry} />
-          {/* <ExportBtn /> */}
         </div>
       </div>
 
@@ -71,7 +71,6 @@ export function HRList() {
           <table className="w-full text-sm">
             <thead className="text-xs text-muted-foreground bg-muted/40 border-b border-white/5">
               <tr>
-                {/* ✅ Changed the header from "Mailboxes" back to "Nylas" */}
                 <Th>Name / ID</Th><Th>Email</Th><Th>Country</Th><Th>Role</Th><Th>Status</Th><Th>Joined</Th><Th>Nylas</Th><Th className="text-right">Action</Th>
               </tr>
             </thead>
@@ -79,7 +78,8 @@ export function HRList() {
               {filtered.map((u) => (
                 <tr key={u.id} className="hover:bg-muted/30 transition-colors">
                   <Td>
-                    <Link to={`/hr/${u.id}`} className="font-medium hover:underline">{u.name}</Link>
+                    {/* 2. UPDATED LINK SYNTAX FOR TANSTACK ROUTER */}
+                    <Link to="/hrDetail/$id" params={{ id: u.id }} className="font-medium hover:underline">{u.name}</Link>
                     <div className="text-[11px] text-muted-foreground">{u.id}</div>
                   </Td>
                   <Td className="text-muted-foreground">{u.email}</Td>
@@ -99,7 +99,6 @@ export function HRList() {
                   </Td>
                   <Td className="tabular-nums text-muted-foreground">{u.joined}</Td>
                   
-                  {/* The counts render here perfectly */}
                   <Td>
                     <div className="flex flex-col gap-1 items-start">
                       {u.activeNylas > 0 && <Pill tone="ok">{u.activeNylas} Active</Pill>}
@@ -109,7 +108,8 @@ export function HRList() {
                   </Td>
                   
                   <Td className="text-right">
-                    <Link to={`/hr/${u.id}`} className="text-xs underline-offset-2 hover:underline text-blue-400">View</Link>
+                    {/* 3. UPDATED LINK SYNTAX FOR TANSTACK ROUTER */}
+                    <Link to="/hrDetail/$id" params={{ id: u.id }} className="text-xs underline-offset-2 hover:underline text-blue-400">View</Link>
                   </Td>
                 </tr>
               ))}

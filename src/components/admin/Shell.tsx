@@ -4,7 +4,8 @@ import {
   LogOut, Search, Moon, Sun, ChevronRight, CircleDot, Bell, Command,
   Menu, X
 } from "lucide-react";
-import { NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
+// 1. IMPORT FROM TANSTACK ROUTER INSTEAD
+import { Link, Outlet, useLocation, useNavigate } from "@tanstack/react-router";
 import { useDark } from "@/hooks/use-dark";
 import { clearToken } from "@/lib/auth";
 
@@ -19,7 +20,7 @@ const navGroups: { label: string; items: { to: string; label: string; icon: any;
   {
     label: "Workspace",
     items: [
-      { to: "/hr", label: "HR Management", icon: Users },
+      { to: "/hrList", label: "HR Management", icon: Users },
       { to: "/nylas", label: "Email & Nylas", icon: Mail },
       { to: "/feedback", label: "Feedback", icon: MessageSquare },
     ],
@@ -41,6 +42,7 @@ export function Shell() {
   const loc = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
+  // 2. UPDATED TO USE TANSTACK'S loc.pathname
   const title = flatNav.find((n) => (n.end ? loc.pathname === n.to : loc.pathname.startsWith(n.to)))?.label ?? "Admin";
 
   return (
@@ -84,18 +86,16 @@ export function Shell() {
               <div className="px-2 mb-1.5 text-[10px] uppercase tracking-wider text-muted-foreground/70 font-medium">{g.label}</div>
               <div className="space-y-0.5">
                 {g.items.map((n) => (
-                  <NavLink
+                  // 3. CHANGED NavLink TO Link
+                  <Link
                     key={n.to}
                     to={n.to}
-                    end={n.end}
+                    activeOptions={{ exact: n.end }}
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className={({ isActive }) =>
-                      `group relative flex items-center gap-2.5 px-2.5 py-2 rounded-lg transition-all ${
-                        isActive
-                          ? "bg-accent text-accent-foreground font-medium shadow-sm"
-                          : "text-muted-foreground hover:bg-muted/60 hover:text-foreground"
-                      }`
-                    }
+                    className="group relative flex items-center gap-2.5 px-2.5 py-2 rounded-lg transition-all text-muted-foreground hover:bg-muted/60 hover:text-foreground"
+                    activeProps={{
+                      className: "bg-accent text-accent-foreground font-medium shadow-sm text-foreground",
+                    }}
                   >
                     {({ isActive }) => (
                       <>
@@ -104,7 +104,7 @@ export function Shell() {
                         <span className="truncate">{n.label}</span>
                       </>
                     )}
-                  </NavLink>
+                  </Link>
                 ))}
               </div>
             </div>
@@ -119,7 +119,7 @@ export function Shell() {
               <div className="text-[10px] text-muted-foreground truncate">admin@finitezen.ai</div>
             </div>
             <button
-              onClick={() => { clearToken(); navigate("/login", { replace: true }); }}
+              onClick={() => { clearToken(); navigate({ to: "/login", replace: true }); }}
               className="p-1.5 rounded-md text-muted-foreground hover:bg-muted hover:text-foreground"
               title="Sign out"
             >

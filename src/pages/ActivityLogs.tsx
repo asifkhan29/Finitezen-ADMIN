@@ -3,7 +3,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CountryFilter, CountryPill, ExportBtn, Pill, SearchInput, Section, Td, Th } from "@/components/admin/primitives";
 import { Loader2, ArrowRight } from "lucide-react";
 import { adminActivityApi, ResumeLogDto, EmailLogDto } from "@/components/admin/api/adminActivityService";
-import type { Country } from "@/components/admin/primitives"; // Note: adjust import path if needed
+import type { Country } from "@/components/admin/primitives";
 
 const formatDate = (isoString: string) => {
   if (!isoString) return "Unknown";
@@ -21,14 +21,18 @@ export function ActivityLogs() {
   const [emails, setEmails] = useState<EmailLogDto[] | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
+  // Optimized useEffect: Only re-run when the 'tab' changes
   useEffect(() => {
     const fetchTab = async () => {
       try {
-        if (tab === "resumes" && resumes === null) {
+        if (tab === "resumes") {
+          // If we already have the data, skip fetching to save API calls
+          if (resumes !== null) return; 
           setIsLoading(true);
           const data = await adminActivityApi.getResumeLogs();
           setResumes(data);
-        } else if (tab === "emails" && emails === null) {
+        } else if (tab === "emails") {
+          if (emails !== null) return;
           setIsLoading(true);
           const data = await adminActivityApi.getEmailLogs();
           setEmails(data);
@@ -41,7 +45,7 @@ export function ActivityLogs() {
     };
     
     fetchTab();
-  }, [tab, resumes, emails]);
+  }, [tab]); // Removed 'resumes' and 'emails' from dependencies to prevent re-firing
 
   const filteredResumes = useMemo(() => {
     if (!resumes) return [];
@@ -148,10 +152,8 @@ export function ActivityLogs() {
                   <tbody className="divide-y">
                     {filteredEmails.map((e, i) => (
                       <tr key={i} className="hover:bg-muted/10 transition-colors">
-                        {/* 1. Who clicked send */}
                         <Td className="font-medium text-foreground">{e.hrEmail || "Unknown HR"}</Td>
                         
-                        {/* 2. Sender Mailbox -> Candidate */}
                         <Td>
                           <div className="flex items-center gap-2 text-xs">
                             <span className="text-muted-foreground truncate max-w-[120px]" title={e.from}>{e.from}</span>

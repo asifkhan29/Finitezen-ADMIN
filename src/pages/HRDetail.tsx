@@ -1,12 +1,15 @@
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+// 1. UPDATED IMPORTS TO TANSTACK ROUTER
+import { Link, useParams } from "@tanstack/react-router";
 import { ShieldCheck, Loader2 } from "lucide-react";
 import { CountryPill, Pill, Section, Stat, Td, Th } from "@/components/admin/primitives";
 import { adminHrApi, HrDetailResponse } from "@/components/admin/api/adminHrService";
 import type { Country } from "@/mock/data";
 
 export function HRDetail() {
-  const { id } = useParams();
+  // 2. UPDATED useParams TO DISABLE STRICT TYPING IN THE COMPONENT FILE
+  const { id } = useParams({ strict: false }) as { id: string };
+  
   const [data, setData] = useState<HrDetailResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -44,8 +47,7 @@ export function HRDetail() {
     <div className="space-y-6 animate-in fade-in duration-700">
       <div className="flex items-start justify-between">
         <div>
-          <Link to="/hr" className="text-xs text-muted-foreground hover:underline">← HR Management</Link>
-          <h1 className="text-xl font-semibold mt-1">{profile.name}</h1>
+          <Link to="/hrList" className="text-xs text-muted-foreground hover:underline">← HR Management</Link>          <h1 className="text-xl font-semibold mt-1">{profile.name}</h1>
           <p className="text-sm text-muted-foreground">{profile.email} · {profile.id}</p>
         </div>
         <div className="flex gap-2 flex-wrap">
@@ -57,7 +59,6 @@ export function HRDetail() {
           
           <Pill tone={profile.status === "Active" ? "ok" : "bad"}>{profile.status}</Pill>
           
-          {/* ✅ DYNAMIC NYLAS BADGES USING COUNTS */}
           {profile.activeNylas > 0 && (
             <Pill tone="ok"><ShieldCheck className="h-3 w-3 mr-1 inline" /> {profile.activeNylas} Active Mailboxes</Pill>
           )}
@@ -70,7 +71,6 @@ export function HRDetail() {
         </div>
       </div>
 
-      {/* 5-Column Grid to show both Daily limits and Lifetime value */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
         <Stat 
           label="Today's Searches" 

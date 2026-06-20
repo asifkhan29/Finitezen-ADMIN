@@ -1,12 +1,13 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { adminAuthApi } from "@/components/admin/api/authService"; // Double-check your matching local import route path here
+// 1. UPDATED IMPORT TO TANSTACK ROUTER
+import { useNavigate } from "@tanstack/react-router";
+import { adminAuthApi } from "@/components/admin/api/authService";
 import { Field } from "@/components/admin/primitives";
 import { Loader2 } from "lucide-react";
 
 export function Login() {
   const nav = useNavigate();
-  const [u, setU] = useState("admin_finitezen"); // Updated to match your configuration default key
+  const [u, setU] = useState("admin_finitezen"); 
   const [p, setP] = useState("");
   const [err, setErr] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -23,7 +24,8 @@ export function Login() {
       
       if (data.accessToken) {
         localStorage.setItem("token", data.accessToken);
-        nav("/", { replace: true });
+        // 2. UPDATED NAVIGATE SYNTAX
+        nav({ to: "/", replace: true });
       } else {
         throw new Error("Payload compromised. Access token missing.");
       }

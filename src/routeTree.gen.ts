@@ -9,68 +9,227 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as SplatRouteImport } from './routes/$'
-import { Route as IndexRouteImport } from './routes/index'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as ProtectedRouteImport } from './routes/_protected'
+import { Route as ProtectedIndexRouteImport } from './routes/_protected/index'
+import { Route as ProtectedPaymentsRouteImport } from './routes/_protected/payments'
+import { Route as ProtectedNylasRouteImport } from './routes/_protected/nylas'
+import { Route as ProtectedLimitsRouteImport } from './routes/_protected/limits'
+import { Route as ProtectedHrListRouteImport } from './routes/_protected/hrList'
+import { Route as ProtectedFeedbackRouteImport } from './routes/_protected/feedback'
+import { Route as ProtectedHrDetailIdRouteImport } from './routes/_protected/hrDetail.$id'
 
-const SplatRoute = SplatRouteImport.update({
-  id: '/$',
-  path: '/$',
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
+const ProtectedRoute = ProtectedRouteImport.update({
+  id: '/_protected',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProtectedIndexRoute = ProtectedIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => ProtectedRoute,
+} as any)
+const ProtectedPaymentsRoute = ProtectedPaymentsRouteImport.update({
+  id: '/payments',
+  path: '/payments',
+  getParentRoute: () => ProtectedRoute,
+} as any)
+const ProtectedNylasRoute = ProtectedNylasRouteImport.update({
+  id: '/nylas',
+  path: '/nylas',
+  getParentRoute: () => ProtectedRoute,
+} as any)
+const ProtectedLimitsRoute = ProtectedLimitsRouteImport.update({
+  id: '/limits',
+  path: '/limits',
+  getParentRoute: () => ProtectedRoute,
+} as any)
+const ProtectedHrListRoute = ProtectedHrListRouteImport.update({
+  id: '/hrList',
+  path: '/hrList',
+  getParentRoute: () => ProtectedRoute,
+} as any)
+const ProtectedFeedbackRoute = ProtectedFeedbackRouteImport.update({
+  id: '/feedback',
+  path: '/feedback',
+  getParentRoute: () => ProtectedRoute,
+} as any)
+const ProtectedHrDetailIdRoute = ProtectedHrDetailIdRouteImport.update({
+  id: '/hrDetail/$id',
+  path: '/hrDetail/$id',
+  getParentRoute: () => ProtectedRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/$': typeof SplatRoute
+  '/': typeof ProtectedIndexRoute
+  '/login': typeof LoginRoute
+  '/feedback': typeof ProtectedFeedbackRoute
+  '/hrList': typeof ProtectedHrListRoute
+  '/limits': typeof ProtectedLimitsRoute
+  '/nylas': typeof ProtectedNylasRoute
+  '/payments': typeof ProtectedPaymentsRoute
+  '/hrDetail/$id': typeof ProtectedHrDetailIdRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/$': typeof SplatRoute
+  '/login': typeof LoginRoute
+  '/feedback': typeof ProtectedFeedbackRoute
+  '/hrList': typeof ProtectedHrListRoute
+  '/limits': typeof ProtectedLimitsRoute
+  '/nylas': typeof ProtectedNylasRoute
+  '/payments': typeof ProtectedPaymentsRoute
+  '/': typeof ProtectedIndexRoute
+  '/hrDetail/$id': typeof ProtectedHrDetailIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
-  '/$': typeof SplatRoute
+  '/_protected': typeof ProtectedRouteWithChildren
+  '/login': typeof LoginRoute
+  '/_protected/feedback': typeof ProtectedFeedbackRoute
+  '/_protected/hrList': typeof ProtectedHrListRoute
+  '/_protected/limits': typeof ProtectedLimitsRoute
+  '/_protected/nylas': typeof ProtectedNylasRoute
+  '/_protected/payments': typeof ProtectedPaymentsRoute
+  '/_protected/': typeof ProtectedIndexRoute
+  '/_protected/hrDetail/$id': typeof ProtectedHrDetailIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/$'
+  fullPaths:
+    | '/'
+    | '/login'
+    | '/feedback'
+    | '/hrList'
+    | '/limits'
+    | '/nylas'
+    | '/payments'
+    | '/hrDetail/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/$'
-  id: '__root__' | '/' | '/$'
+  to:
+    | '/login'
+    | '/feedback'
+    | '/hrList'
+    | '/limits'
+    | '/nylas'
+    | '/payments'
+    | '/'
+    | '/hrDetail/$id'
+  id:
+    | '__root__'
+    | '/_protected'
+    | '/login'
+    | '/_protected/feedback'
+    | '/_protected/hrList'
+    | '/_protected/limits'
+    | '/_protected/nylas'
+    | '/_protected/payments'
+    | '/_protected/'
+    | '/_protected/hrDetail/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  SplatRoute: typeof SplatRoute
+  ProtectedRoute: typeof ProtectedRouteWithChildren
+  LoginRoute: typeof LoginRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/$': {
-      id: '/$'
-      path: '/$'
-      fullPath: '/$'
-      preLoaderRoute: typeof SplatRouteImport
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
+    '/_protected': {
+      id: '/_protected'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof ProtectedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_protected/': {
+      id: '/_protected/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof ProtectedIndexRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/payments': {
+      id: '/_protected/payments'
+      path: '/payments'
+      fullPath: '/payments'
+      preLoaderRoute: typeof ProtectedPaymentsRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/nylas': {
+      id: '/_protected/nylas'
+      path: '/nylas'
+      fullPath: '/nylas'
+      preLoaderRoute: typeof ProtectedNylasRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/limits': {
+      id: '/_protected/limits'
+      path: '/limits'
+      fullPath: '/limits'
+      preLoaderRoute: typeof ProtectedLimitsRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/hrList': {
+      id: '/_protected/hrList'
+      path: '/hrList'
+      fullPath: '/hrList'
+      preLoaderRoute: typeof ProtectedHrListRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/feedback': {
+      id: '/_protected/feedback'
+      path: '/feedback'
+      fullPath: '/feedback'
+      preLoaderRoute: typeof ProtectedFeedbackRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/hrDetail/$id': {
+      id: '/_protected/hrDetail/$id'
+      path: '/hrDetail/$id'
+      fullPath: '/hrDetail/$id'
+      preLoaderRoute: typeof ProtectedHrDetailIdRouteImport
+      parentRoute: typeof ProtectedRoute
     }
   }
 }
 
+interface ProtectedRouteChildren {
+  ProtectedFeedbackRoute: typeof ProtectedFeedbackRoute
+  ProtectedHrListRoute: typeof ProtectedHrListRoute
+  ProtectedLimitsRoute: typeof ProtectedLimitsRoute
+  ProtectedNylasRoute: typeof ProtectedNylasRoute
+  ProtectedPaymentsRoute: typeof ProtectedPaymentsRoute
+  ProtectedIndexRoute: typeof ProtectedIndexRoute
+  ProtectedHrDetailIdRoute: typeof ProtectedHrDetailIdRoute
+}
+
+const ProtectedRouteChildren: ProtectedRouteChildren = {
+  ProtectedFeedbackRoute: ProtectedFeedbackRoute,
+  ProtectedHrListRoute: ProtectedHrListRoute,
+  ProtectedLimitsRoute: ProtectedLimitsRoute,
+  ProtectedNylasRoute: ProtectedNylasRoute,
+  ProtectedPaymentsRoute: ProtectedPaymentsRoute,
+  ProtectedIndexRoute: ProtectedIndexRoute,
+  ProtectedHrDetailIdRoute: ProtectedHrDetailIdRoute,
+}
+
+const ProtectedRouteWithChildren = ProtectedRoute._addFileChildren(
+  ProtectedRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
-  SplatRoute: SplatRoute,
+  ProtectedRoute: ProtectedRouteWithChildren,
+  LoginRoute: LoginRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
