@@ -1,14 +1,15 @@
 import { useEffect, useState } from "react";
-// 1. UPDATED IMPORTS TO TANSTACK ROUTER
-import { Link, useParams } from "@tanstack/react-router";
+// 1. UPDATED IMPORTS TO react-router-dom
+import { Link, useParams } from "react-router-dom";
 import { ShieldCheck, Loader2 } from "lucide-react";
 import { CountryPill, Pill, Section, Stat, Td, Th } from "@/components/admin/primitives";
 import { adminHrApi, HrDetailResponse } from "@/components/admin/api/adminHrService";
 import type { Country } from "@/mock/data";
 
 export function HRDetail() {
-  // 2. UPDATED useParams TO DISABLE STRICT TYPING IN THE COMPONENT FILE
-  const { id } = useParams({ strict: false }) as { id: string };
+  // 2. UPDATED useParams: react-router-dom v7 useParams returns an object 
+  // where params are direct properties. 
+  const { id } = useParams();
   
   const [data, setData] = useState<HrDetailResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -38,7 +39,8 @@ export function HRDetail() {
   }
 
   if (!data) {
-    return <div className="text-sm text-muted-foreground">User not found. <Link className="underline" to="/hr">Back</Link></div>;
+    // 3. UPDATED LINK SYNTAX
+    return <div className="text-sm text-muted-foreground">User not found. <Link className="underline" to="/hrList">Back</Link></div>;
   }
 
   const { profile, stats, recentResumes, recentEmails } = data;
@@ -47,7 +49,9 @@ export function HRDetail() {
     <div className="space-y-6 animate-in fade-in duration-700">
       <div className="flex items-start justify-between">
         <div>
-          <Link to="/hrList" className="text-xs text-muted-foreground hover:underline">← HR Management</Link>          <h1 className="text-xl font-semibold mt-1">{profile.name}</h1>
+          {/* 4. UPDATED LINK SYNTAX */}
+          <Link to="/hrList" className="text-xs text-muted-foreground hover:underline">← HR Management</Link>
+          <h1 className="text-xl font-semibold mt-1">{profile.name}</h1>
           <p className="text-sm text-muted-foreground">{profile.email} · {profile.id}</p>
         </div>
         <div className="flex gap-2 flex-wrap">
@@ -72,31 +76,11 @@ export function HRDetail() {
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
-        <Stat 
-          label="Today's Searches" 
-          value={stats.dailySearchesUsed} 
-          sub="Resets at midnight local" 
-        />
-        <Stat 
-          label="Today's Outreach" 
-          value={`${stats.dailyEmailsSent} / ${stats.emailLimit}`} 
-          sub={`${stats.emailLimit > 0 ? Math.round((stats.dailyEmailsSent / stats.emailLimit) * 100) : 0}% of daily limit`} 
-        />
-        <Stat 
-          label="Active Grants" 
-          value={stats.activeGrants} 
-          sub="Connected Nylas mailboxes"
-        />
-        <Stat 
-          label="Lifetime Outreach" 
-          value={stats.lifetimeEmailsSent.toLocaleString()} 
-          sub="Total emails sent all-time" 
-        />
-        <Stat 
-          label="Lifetime Resumes" 
-          value={(stats.resumesByBulk + stats.resumesByMail).toLocaleString()} 
-          sub={`${stats.resumesByMail} mail · ${stats.resumesByBulk} bulk`} 
-        />
+        <Stat label="Today's Searches" value={stats.dailySearchesUsed} sub="Resets at midnight local" />
+        <Stat label="Today's Outreach" value={`${stats.dailyEmailsSent} / ${stats.emailLimit}`} sub={`${stats.emailLimit > 0 ? Math.round((stats.dailyEmailsSent / stats.emailLimit) * 100) : 0}% of daily limit`} />
+        <Stat label="Active Grants" value={stats.activeGrants} sub="Connected Nylas mailboxes" />
+        <Stat label="Lifetime Outreach" value={stats.lifetimeEmailsSent.toLocaleString()} sub="Total emails sent all-time" />
+        <Stat label="Lifetime Resumes" value={(stats.resumesByBulk + stats.resumesByMail).toLocaleString()} sub={`${stats.resumesByMail} mail · ${stats.resumesByBulk} bulk`} />
       </div>
       
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">

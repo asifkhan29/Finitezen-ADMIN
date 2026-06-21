@@ -1,9 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
-// 1. UPDATED IMPORT
-import { Link } from "@tanstack/react-router";
-import { CountryFilter, CountryPill, ExportBtn, Pill, SearchInput, Section, Td, Th } from "@/components/admin/primitives";
+// 1. IMPORT FROM react-router-dom
+import { Link } from "react-router-dom";
+import { CountryFilter, CountryPill, Pill, SearchInput, Section, Td, Th } from "@/components/admin/primitives";
 import { Loader2 } from "lucide-react";
-import { adminHrApi , HrUserDto } from "@/components/admin/api/adminHrService";
+import { adminHrApi, HrUserDto } from "@/components/admin/api/adminHrService";
 import type { Country } from "@/mock/data";
 
 export function HRList() {
@@ -78,8 +78,8 @@ export function HRList() {
               {filtered.map((u) => (
                 <tr key={u.id} className="hover:bg-muted/30 transition-colors">
                   <Td>
-                    {/* 2. UPDATED LINK SYNTAX FOR TANSTACK ROUTER */}
-                    <Link to="/hrDetail/$id" params={{ id: u.id }} className="font-medium hover:underline">{u.name}</Link>
+                    {/* 2. UPDATED LINK SYNTAX: Simple path string */}
+                    <Link to={`/hr/${u.id}`} className="font-medium hover:underline">{u.name}</Link>
                     <div className="text-[11px] text-muted-foreground">{u.id}</div>
                   </Td>
                   <Td className="text-muted-foreground">{u.email}</Td>
@@ -108,8 +108,8 @@ export function HRList() {
                   </Td>
                   
                   <Td className="text-right">
-                    {/* 3. UPDATED LINK SYNTAX FOR TANSTACK ROUTER */}
-                    <Link to="/hrDetail/$id" params={{ id: u.id }} className="text-xs underline-offset-2 hover:underline text-blue-400">View</Link>
+                    {/* 3. UPDATED LINK SYNTAX */}
+                    <Link to={`/hr/${u.id}`} className="text-xs underline-offset-2 hover:underline text-blue-400">View</Link>
                   </Td>
                 </tr>
               ))}

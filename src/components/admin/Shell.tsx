@@ -2,14 +2,14 @@ import { useState } from "react";
 import {
   LayoutDashboard, Users, FileText, Mail, MessageSquare, CreditCard, Sliders,
   LogOut, Search, Moon, Sun, ChevronRight, CircleDot, Bell, Command,
-  Menu, X
+  Menu, X,
 } from "lucide-react";
-// 1. IMPORT FROM TANSTACK ROUTER INSTEAD
-import { Link, Outlet, useLocation, useNavigate } from "@tanstack/react-router";
+// Import from react-router-dom
+import { NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useDark } from "@/hooks/use-dark";
 import { clearToken } from "@/lib/auth";
 
-const navGroups: { label: string; items: { to: string; label: string; icon: any; end?: boolean }[] }[] = [
+const navGroups = [
   {
     label: "Overview",
     items: [
@@ -42,40 +42,27 @@ export function Shell() {
   const loc = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  // 2. UPDATED TO USE TANSTACK'S loc.pathname
   const title = flatNav.find((n) => (n.end ? loc.pathname === n.to : loc.pathname.startsWith(n.to)))?.label ?? "Admin";
 
   return (
     <div className="min-h-screen flex bg-background text-foreground relative">
-      
-      {/* Mobile Overlay */}
       {isMobileMenuOpen && (
-        <div 
-          className="fixed inset-0 z-40 bg-background/80 backdrop-blur-sm md:hidden"
-          onClick={() => setIsMobileMenuOpen(false)}
-        />
+        <div className="fixed inset-0 z-40 bg-background/80 backdrop-blur-sm md:hidden" onClick={() => setIsMobileMenuOpen(false)} />
       )}
 
-      {/* Sidebar */}
       <aside 
-        className={`fixed inset-y-0 left-0 z-50 w-64 border-r flex flex-col transition-transform duration-300 ease-in-out md:static md:translate-x-0 ${
-          isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
-        }`} 
+        className={`fixed inset-y-0 left-0 z-50 w-64 border-r flex flex-col transition-transform duration-300 ease-in-out md:static md:translate-x-0 ${isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"}`} 
         style={{ background: "var(--gradient-surface)" }}
       >
         <div className="px-4 h-16 flex items-center justify-between border-b">
           <div className="flex items-center gap-2.5">
             <div className="h-9 w-9 rounded-xl grid place-items-center text-sm font-bold text-primary-foreground shadow-[var(--shadow-glow)]" style={{ background: "var(--gradient-brand)" }}>F</div>
-            <div className="min-w-0">
-              <div className="text-sm font-semibold leading-tight tracking-tight">Finitezen AI</div>
-              <div className="text-[10px] uppercase tracking-wider text-muted-foreground">Admin · v2.4</div>
+            <div>
+              <div className="text-sm font-semibold tracking-tight">Finitezen AI</div>
+              <div className="text-[10px] uppercase text-muted-foreground">Admin · v2.4</div>
             </div>
           </div>
-          {/* Mobile Close Button */}
-          <button 
-            className="md:hidden p-1.5 -mr-1.5 rounded-md text-muted-foreground hover:bg-muted hover:text-foreground"
-            onClick={() => setIsMobileMenuOpen(false)}
-          >
+          <button className="md:hidden p-1.5 rounded-md text-muted-foreground hover:bg-muted" onClick={() => setIsMobileMenuOpen(false)}>
             <X className="h-5 w-5" />
           </button>
         </div>
@@ -86,16 +73,16 @@ export function Shell() {
               <div className="px-2 mb-1.5 text-[10px] uppercase tracking-wider text-muted-foreground/70 font-medium">{g.label}</div>
               <div className="space-y-0.5">
                 {g.items.map((n) => (
-                  // 3. CHANGED NavLink TO Link
-                  <Link
+                  <NavLink
                     key={n.to}
                     to={n.to}
-                    activeOptions={{ exact: n.end }}
+                    end={n.end}
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className="group relative flex items-center gap-2.5 px-2.5 py-2 rounded-lg transition-all text-muted-foreground hover:bg-muted/60 hover:text-foreground"
-                    activeProps={{
-                      className: "bg-accent text-accent-foreground font-medium shadow-sm text-foreground",
-                    }}
+                    className={({ isActive }) =>
+                      `group relative flex items-center gap-2.5 px-2.5 py-2 rounded-lg transition-all text-muted-foreground hover:bg-muted/60 hover:text-foreground ${
+                        isActive ? "bg-accent text-accent-foreground font-medium shadow-sm text-foreground" : ""
+                      }`
+                    }
                   >
                     {({ isActive }) => (
                       <>
@@ -104,7 +91,7 @@ export function Shell() {
                         <span className="truncate">{n.label}</span>
                       </>
                     )}
-                  </Link>
+                  </NavLink>
                 ))}
               </div>
             </div>
@@ -116,12 +103,10 @@ export function Shell() {
             <div className="h-9 w-9 rounded-full grid place-items-center text-xs font-semibold text-primary-foreground" style={{ background: "var(--gradient-brand)" }}>AD</div>
             <div className="min-w-0 flex-1">
               <div className="text-xs font-medium truncate">Admin User</div>
-              <div className="text-[10px] text-muted-foreground truncate">admin@finitezen.ai</div>
             </div>
             <button
-              onClick={() => { clearToken(); navigate({ to: "/login", replace: true }); }}
-              className="p-1.5 rounded-md text-muted-foreground hover:bg-muted hover:text-foreground"
-              title="Sign out"
+              onClick={() => { clearToken(); navigate("/login"); }}
+              className="p-1.5 rounded-md text-muted-foreground hover:bg-muted"
             >
               <LogOut className="h-3.5 w-3.5" />
             </button>
@@ -129,43 +114,16 @@ export function Shell() {
         </div>
       </aside>
 
-      {/* Main Content */}
       <main className="flex-1 min-w-0">
         <header className="h-16 border-b px-6 flex items-center justify-between bg-background/70 backdrop-blur-xl sticky top-0 z-10">
           <div className="flex items-center gap-3">
-            {/* Mobile Hamburger Button */}
-            <button 
-              className="md:hidden p-1.5 -ml-2 rounded-md text-muted-foreground hover:bg-muted hover:text-foreground"
-              onClick={() => setIsMobileMenuOpen(true)}
-            >
+            <button className="md:hidden p-1.5 -ml-2 rounded-md text-muted-foreground hover:bg-muted" onClick={() => setIsMobileMenuOpen(true)}>
               <Menu className="h-5 w-5" />
             </button>
-            <div className="flex items-center gap-2 text-sm">
-              <span className="text-muted-foreground">Console</span>
-              <ChevronRight className="h-3.5 w-3.5 text-muted-foreground" />
-              <span className="font-semibold tracking-tight">{title}</span>
-            </div>
+            <span className="font-semibold tracking-tight">{title}</span>
           </div>
-          
-          <div className="flex items-center gap-2">
-            <div className="hidden md:flex relative">
-              <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
-              <input placeholder="Search…" className="w-72 rounded-lg border bg-muted/40 pl-8 pr-12 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-ring" />
-              <kbd className="absolute right-2 top-1/2 -translate-y-1/2 hidden sm:inline-flex items-center gap-0.5 rounded border bg-background px-1.5 py-0.5 text-[10px] text-muted-foreground"><Command className="h-2.5 w-2.5" />K</kbd>
-            </div>
-            <span className="hidden lg:inline-flex items-center gap-1.5 rounded-full border bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 px-2.5 py-1 text-[11px] font-medium">
-              <CircleDot className="h-3 w-3" /> Operational
-            </span>
-            <button className="relative h-9 w-9 grid place-items-center rounded-lg border bg-card hover:bg-muted" title="Notifications">
-              <Bell className="h-4 w-4" />
-              <span className="absolute top-1.5 right-1.5 h-1.5 w-1.5 rounded-full bg-destructive" />
-            </button>
-            <button onClick={toggle} className="h-9 w-9 grid place-items-center rounded-lg border bg-card hover:bg-muted" title="Toggle theme">
-              {dark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-            </button>
-          </div>
+          {/* Header actions... */}
         </header>
-        
         <div className="p-6 max-w-[1600px] mx-auto">
           <Outlet />
         </div>

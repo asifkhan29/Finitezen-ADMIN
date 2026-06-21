@@ -1,12 +1,13 @@
 import { useState } from "react";
-// 1. UPDATED IMPORT TO TANSTACK ROUTER
-import { useNavigate } from "@tanstack/react-router";
+// 1. UPDATED IMPORT TO REACT-ROUTER-DOM
+import { useNavigate } from "react-router-dom";
 import { adminAuthApi } from "@/components/admin/api/authService";
 import { Field } from "@/components/admin/primitives";
 import { Loader2 } from "lucide-react";
 
 export function Login() {
-  const nav = useNavigate();
+  // 2. useNavigate() from react-router-dom returns a function directly
+  const navigate = useNavigate();
   const [u, setU] = useState("admin_finitezen"); 
   const [p, setP] = useState("");
   const [err, setErr] = useState("");
@@ -24,8 +25,9 @@ export function Login() {
       
       if (data.accessToken) {
         localStorage.setItem("token", data.accessToken);
-        // 2. UPDATED NAVIGATE SYNTAX
-        nav({ to: "/", replace: true });
+        // 3. UPDATED NAVIGATE SYNTAX
+        // React Router uses navigate('/path', { replace: true })
+        navigate("/", { replace: true });
       } else {
         throw new Error("Payload compromised. Access token missing.");
       }
@@ -37,6 +39,7 @@ export function Login() {
   };
 
   return (
+    // ... rest of your JSX remains exactly the same
     <div className="min-h-screen grid place-items-center px-4 relative overflow-hidden bg-background">
       <div className="absolute inset-0 -z-10 opacity-60 [background:radial-gradient(60%_50%_at_20%_10%,oklch(0.55_0.22_277/0.15),transparent_60%),radial-gradient(50%_50%_at_90%_90%,oklch(0.62_0.2_320/0.15),transparent_60%)]" />
       <div className="w-full max-w-sm rounded-2xl border bg-card p-8 shadow-[var(--shadow-card)]">
