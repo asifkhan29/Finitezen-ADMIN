@@ -144,12 +144,21 @@ export function CountryPill({ c }: { c?: Country | string }) {
   );
 }
 
-export function Th({ children, className = "" }: { children: React.ReactNode; className?: string }) {
-  return <th className={`text-left font-medium px-4 py-2 ${className}`}>{children}</th>;
+// Updated Th to accept colSpan if needed, and standard className
+export function Th({ children, className = "", colSpan }: { children: React.ReactNode; className?: string; colSpan?: number }) {
+  return <th colSpan={colSpan} className={`text-left font-medium px-4 py-2 ${className}`}>{children}</th>;
 }
-export function Td({ children, className = "" }: { children: React.ReactNode; className?: string }) {
-  return <td className={`px-4 py-3 align-top ${className}`}>{children}</td>;
+
+// Updated Td to accept colSpan and title
+export function Td({ children, className = "", colSpan, title }: { 
+  children: React.ReactNode; 
+  className?: string; 
+  colSpan?: number;
+  title?: string;
+}) {
+  return <td title={title} colSpan={colSpan} className={`px-4 py-3 align-top ${className}`}>{children}</td>;
 }
+
 
 export function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
