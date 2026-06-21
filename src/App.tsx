@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Shell } from './components/admin/Shell';
 import { Protected } from './components/admin/Protected';
 import { Login } from './pages/Login';
@@ -17,7 +17,7 @@ export default function App() {
       <Routes>
         <Route path="/login" element={<Login />} />
         
-        {/* Everything inside this route renders within Shell */}
+        {/* Protected routes */}
         <Route path="/" element={<Protected><Shell /></Protected>}>
           <Route index element={<Dashboard />} />
           <Route path="activity" element={<ActivityLogs />} />
@@ -28,6 +28,9 @@ export default function App() {
           <Route path="limits" element={<LimitsPage />} />
           <Route path="hr/:id" element={<HRDetail />} />
         </Route>
+
+        {/* Catch-all: If user goes to any random URL, send them to Dashboard (Protected will handle the redirect to login if no token) */}
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
   );
